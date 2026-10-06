@@ -3,7 +3,8 @@
 Kleines vollständig lokales Windows-Programm: Es liest den Monatsdienstplan für
 **Klein** aus einer `.xlsx` und erzeugt eine gut lesbare, einseitige PDF im
 **A4-Querformat**. Zwei Tabellen teilen den Monat gleichmäßig; beide Dienstzeilen
-und leere Zellen bleiben erhalten. Excel-Farben werden nicht übernommen.
+und leere Zellen bleiben erhalten. Füllfarben der Tagesnummern, Wochentage und
+beiden Dienstzeilen werden aus Excel übernommen.
 
 ## Projektstruktur
 
@@ -103,8 +104,11 @@ Es gibt keine Telemetrie oder Netzwerkübertragung.
 ## Layout und Erkennung
 
 Layoutwerte stehen zentral in `theme.py`: Ränder, Schriftgrößen, Farben,
-Linienstärken, Zeilenhöhen, Tabellenabstand und Padding. Wochenenden sind grau
-hinterlegt und über die fett gedruckten Kürzel **Sa/So** auch ohne Farbe erkennbar.
+Linienstärken, Zeilenhöhen, Tabellenabstand und Padding. Excel-Füllfarben haben
+pro Zelle Vorrang; ohne Füllung werden Wochenenden neutral grau, übrige Zellen
+weiß dargestellt. Die Kürzel **Sa/So** bleiben fett. Schwarze oder weiße Schrift
+wird nach dem besseren Kontrast gewählt. RGB-, Theme-/Tint- und Indexed-Farben
+werden in neutrale RGB-Werte umgewandelt. Details: `docs/FARBEN.md`.
 Lange Dienstwerte erhalten eine kleinere Schrift, damit ihr Inhalt vollständig
 in die Tageszelle passt.
 

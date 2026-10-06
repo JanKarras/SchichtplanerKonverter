@@ -25,14 +25,14 @@ def testExplicitFollowingMonth(sampleFile: Path) -> None:
 
 def testStrictReadBounds(monkeypatch, sampleFile: Path) -> None:
     realWorkbook = load_workbook(sampleFile, read_only=True, data_only=True)
-    rows = tuple(realWorkbook.active.iter_rows(min_row=1, max_row=30, min_col=1, max_col=80, values_only=True))
+    rows = tuple(realWorkbook.active.iter_rows(min_row=1, max_row=30, min_col=1, max_col=80, values_only=False))
     realWorkbook.close()
     sheet = Mock()
     sheet.iter_rows.return_value = iter(rows)
     workbook = Mock(worksheets=[sheet])
     monkeypatch.setattr(excel_reader, 'load_workbook', lambda *args, **kwargs: workbook)
     assert readSchedule(sampleFile).month == 4
-    sheet.iter_rows.assert_called_once_with(min_row=1, max_row=30, min_col=1, max_col=80, values_only=True)
+    sheet.iter_rows.assert_called_once_with(min_row=1, max_row=30, min_col=1, max_col=80, values_only=False)
     workbook.close.assert_called_once()
 
 

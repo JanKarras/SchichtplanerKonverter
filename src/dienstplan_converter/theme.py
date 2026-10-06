@@ -11,13 +11,13 @@ class PdfTheme:
     daySize: float = 22
     weekdaySize: float = 15
     valueSize: float = 21
-    labelSize: float = 14
+    labelSize: float = 13
     employeeSize: float = 24
     labelWidth: float = 112
     rowHeights: tuple[float, ...] = (36, 28, 82, 82)
     tableGap: float = 36
     titleGap: float = 64
-    cellPadding: float = 3
+    cellPadding: float = 1.5
     lineWidth: float = 1.0
     outerLineWidth: float = 1.6
     textColor: Color = HexColor('#202830')

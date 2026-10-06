@@ -43,7 +43,7 @@ def dayNumber(value: Any) -> int | None:
     return None
 
 
-def findStructure(rows: tuple[tuple[Any, ...], ...], month: int, year: int) -> tuple[int, int, int]:
+def findStructure(rows: tuple[tuple[Any, ...], ...], month: int, year: int) -> tuple[int, int, int, int, int]:
     headers = [(r, c) for r, row in enumerate(rows) for c, value in enumerate(row)
                if re.sub(r'\s+', '', str(value)).casefold() == 'mitarbeiter/tag']
     if len(headers) != 1:
@@ -64,4 +64,4 @@ def findStructure(rows: tuple[tuple[Any, ...], ...], month: int, year: int) -> t
     employeeRow = employees[0]
     if rows[employeeRow + 1][labelColumn] not in (None, '', 'Klein'):
         raise ConversionError('Die zweite Dienstplanzeile für Klein konnte nicht erkannt werden.')
-    return employeeRow, candidates[0][1], dayCount
+    return employeeRow, candidates[0][1], dayCount, candidates[0][0], headerRow

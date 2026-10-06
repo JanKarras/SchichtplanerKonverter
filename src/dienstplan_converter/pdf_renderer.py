@@ -4,6 +4,7 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 
 from reportlab.lib.pagesizes import A4, landscape
+from reportlab.lib.colors import Color
 from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen.canvas import Canvas
 
@@ -11,15 +12,17 @@ from .calendar_utils import MONTH_NAMES, splitMonth
 from .errors import ConversionError
 from .error_log import logUnexpectedError
 from .models import DayEntry, MonthSchedule
+from .pdf_colors import dayBackgrounds, contrastingText
 from .theme import DEFAULT_THEME, PdfTheme
 
 
 def drawText(canvas: Canvas, text: str, x: float, y: float, width: float,
-             height: float, font: str, size: float, theme: PdfTheme) -> None:
+             height: float, font: str, size: float, theme: PdfTheme,
+             textColor: Color | None = None) -> None:
     available = width - 2 * theme.cellPadding
     textWidth = stringWidth(text, font, size)
     fittedSize = min(size, size * available / textWidth) if textWidth else size
-    canvas.setFillColor(theme.textColor)
+    canvas.setFillColor(textColor if textColor is not None else theme.textColor)
     canvas.setFont(font, fittedSize)
     canvas.drawCentredString(x + width / 2, y + (height - fittedSize) / 2 + fittedSize * 0.18, text)
 
@@ -31,16 +34,17 @@ def drawTable(canvas: Canvas, days: tuple[DayEntry, ...], top: float,
     left = theme.margin
     for index, day in enumerate(days):
         x = left + theme.labelWidth + index * dayWidth
-        canvas.setFillColor(theme.weekendColor if day.weekday in ('Sa', 'So') else theme.headerColor)
-        canvas.rect(x, top - totalHeight if day.weekday in ('Sa', 'So') else top - sum(theme.rowHeights[:2]),
-                    dayWidth, totalHeight if day.weekday in ('Sa', 'So') else sum(theme.rowHeights[:2]), stroke=0, fill=1)
+        backgrounds = dayBackgrounds(day, theme)
         values = (f'{day.day:02}', day.weekday, day.primaryValue or '', day.secondaryValue or '')
         y = top
         for row, (value, height) in enumerate(zip(values, theme.rowHeights)):
             y -= height
+            background = backgrounds[row]
+            canvas.setFillColor(background)
+            canvas.rect(x, y, dayWidth, height, stroke=0, fill=1)
             size = (theme.daySize, theme.weekdaySize, theme.valueSize, theme.valueSize)[row]
             font = theme.boldFont if row != 1 or day.weekday in ('Sa', 'So') else theme.font
-            drawText(canvas, value, x, y, dayWidth, height, font, size, theme)
+            drawText(canvas, value, x, y, dayWidth, height, font, size, theme, contrastingText(background))
     drawText(canvas, 'Mitarbeiter / Tag', left, top - theme.rowHeights[0],
              theme.labelWidth, theme.rowHeights[0], theme.boldFont, theme.labelSize, theme)
     drawText(canvas, 'Klein', left, top - totalHeight, theme.labelWidth,
