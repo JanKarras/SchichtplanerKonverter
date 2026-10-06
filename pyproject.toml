@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dienstplan-converter"
+version = "1.0.0"
+requires-python = ">=3.11"
+dependencies = ["openpyxl>=3.1,<4", "reportlab>=4.2,<5"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "pypdf>=5,<7", "pyinstaller>=6,<7"]
+
+[project.scripts]
+dienstplan-converter = "dienstplan_converter.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
