@@ -1,0 +1,60 @@
+name: Windows EXE bauen
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v6
+
+      - name: Python 3.12 einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          architecture: x64
+
+      - name: Projektabhängigkeiten installieren
+        run: |
+          python -m venv .venv
+          if ($LASTEXITCODE -ne 0) { throw "Virtuelle Umgebung konnte nicht erstellt werden." }
+          & .\.venv\Scripts\python.exe -m pip install -e ".[dev]"
+          if ($LASTEXITCODE -ne 0) { throw "Installation fehlgeschlagen." }
+
+      - name: Vollständige Test-Suite ausführen
+        run: |
+          & .\.venv\Scripts\python.exe -m pytest -q
+          if ($LASTEXITCODE -ne 0) { throw "Tests fehlgeschlagen; kein Windows-Build." }
+
+      - name: Windows-EXE bauen
+        run: .\build.ps1
+
+      - name: Erzeugte EXE prüfen
+        run: |
+          $exePath = Join-Path $PWD "dist\DienstplanConverter.exe"
+          if (-not (Test-Path -LiteralPath $exePath -PathType Leaf)) {
+            throw "dist/DienstplanConverter.exe wurde nicht erzeugt."
+          }
+          if ((Get-Item -LiteralPath $exePath).Length -eq 0) {
+            throw "Die erzeugte EXE ist leer."
+          }
+
+      - name: Fertige Windows-EXE hochladen
+        uses: actions/upload-artifact@v4
+        with:
+          name: DienstplanConverter-Windows
+          path: dist/DienstplanConverter.exe
+          if-no-files-found: error

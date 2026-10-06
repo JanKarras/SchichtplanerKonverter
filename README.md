@@ -117,3 +117,18 @@ unterstützt. Bei mehreren erkennbaren Monatsplänen wird zur Vermeidung einer
 versehentlichen Auswahl abgebrochen. Neue Quellsysteme außerhalb dieser Grenzen
 können eine Anpassung des Parsers benötigen. Formeln werden als zuletzt von Excel
 gespeicherte Werte gelesen; die Anwendung berechnet keine Excel-Formeln.
+
+## EXE über GitHub herunterladen (ohne Git/Python auf dem Windows-PC)
+
+Nach dem Hochladen des Projekts einschließlich `.github/workflows/build-windows.yml`
+auf GitHub läuft der Windows-Build automatisch bei Pushes auf `main`. Manuell:
+**Actions → Windows EXE bauen → Run workflow** (Workflow auf dem Standardbranch).
+
+Nach einem erfolgreichen Lauf die Zusammenfassung des Laufs öffnen und unter
+**Artifacts** das Artefakt **DienstplanConverter-Windows** herunterladen.
+Die ZIP-Datei entpacken und `DienstplanConverter.exe` verwenden; auf dem privaten
+Windows-PC sind dafür weder Git noch Python nötig.
+
+Der Workflow verwendet Windows und Python 3.12, prüft zuerst die vollständige
+Test-Suite und ruft erst danach `build.ps1` auf. Das Build-Skript führt zusätzlich
+seine eigenen Tests aus. Als Artefakt wird ausschließlich die fertige EXE abgelegt.
