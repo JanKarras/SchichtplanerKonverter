@@ -5,20 +5,21 @@ from reportlab.lib.colors import HexColor, Color
 
 @dataclass(frozen=True)
 class PdfTheme:
-    margin: float = 28
-    titleSize: float = 23
-    sectionSize: float = 12
-    daySize: float = 17
-    weekdaySize: float = 12
-    valueSize: float = 16
-    labelSize: float = 13
+    margin: float = 18
+    titleSize: float = 26
+    sectionSize: float = 16
+    daySize: float = 22
+    weekdaySize: float = 15
+    valueSize: float = 21
+    labelSize: float = 14
+    employeeSize: float = 24
     labelWidth: float = 112
-    rowHeights: tuple[float, ...] = (34, 26, 62, 62)
-    tableGap: float = 48
-    titleGap: float = 62
+    rowHeights: tuple[float, ...] = (36, 28, 82, 82)
+    tableGap: float = 36
+    titleGap: float = 64
     cellPadding: float = 3
-    lineWidth: float = 0.7
-    outerLineWidth: float = 1.2
+    lineWidth: float = 1.0
+    outerLineWidth: float = 1.6
     textColor: Color = HexColor('#202830')
     lineColor: Color = HexColor('#38424c')
     headerColor: Color = HexColor('#f0f2f4')

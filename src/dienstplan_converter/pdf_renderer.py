@@ -44,7 +44,7 @@ def drawTable(canvas: Canvas, days: tuple[DayEntry, ...], top: float,
     drawText(canvas, 'Mitarbeiter / Tag', left, top - theme.rowHeights[0],
              theme.labelWidth, theme.rowHeights[0], theme.boldFont, theme.labelSize, theme)
     drawText(canvas, 'Klein', left, top - totalHeight, theme.labelWidth,
-             sum(theme.rowHeights[2:]), theme.boldFont, theme.daySize, theme)
+             sum(theme.rowHeights[2:]), theme.boldFont, theme.employeeSize, theme)
     canvas.setStrokeColor(theme.lineColor)
     canvas.setLineWidth(theme.lineWidth)
     for index in range(len(days)):
